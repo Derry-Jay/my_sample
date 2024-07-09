@@ -12,9 +12,7 @@ class AppConfig {
 
   static final AppConfig _singleton = AppConfig._internal();
 
-  factory AppConfig() {
-    return _singleton;
-  }
+  factory AppConfig() => _singleton;
 
   AppConfig._internal();
 

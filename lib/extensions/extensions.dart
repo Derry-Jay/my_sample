@@ -12,7 +12,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fraction/fraction.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
@@ -21,10 +23,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gradient_icon/gradient_icon.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:local_auth_android/src/auth_messages_android.dart';
-import 'package:local_auth_darwin/types/auth_messages_ios.dart';
 import 'package:local_auth_platform_interface/types/auth_messages.dart';
-import 'package:local_auth_windows/types/auth_messages_windows.dart';
 import 'package:readmore/readmore.dart';
 import 'package:yaml/src/error_listener.dart';
 import 'package:yaml/yaml.dart';
@@ -65,8 +64,9 @@ extension Pad on EdgeInsetsGeometry {
 
 extension Asdfgh on X509Certificate {
   bool get isValid =>
-      (today.isAfter(startValidity) || today.isAtSameMomentAs(startValidity)) &&
-      today.isBefore(endValidity);
+      (DateTime.now().isAfter(startValidity) ||
+          DateTime.now().isAtSameMomentAs(startValidity)) &&
+      DateTime.now().isBefore(endValidity);
 }
 
 extension Assistant on AxisDirection {
@@ -75,12 +75,11 @@ extension Assistant on AxisDirection {
   bool get isReversed => axisDirectionIsReversed(this);
 }
 
-extension Time on Duration? {
-  Timer getTimer(VoidCallback callback) =>
-      Timer(this ?? Duration.zero, callback);
+extension Time on Duration {
+  Timer getTimer(VoidCallback callback) => Timer(this, callback);
 
   Timer getPeriodicTimer(void Function(Timer) callback) =>
-      Timer.periodic(this ?? Duration.zero, callback);
+      Timer.periodic(this, callback);
 }
 
 extension Subordinate on HttpClientResponse {
@@ -99,6 +98,15 @@ extension Formatters on Pattern {
   FilteringTextInputFormatter restrict([String? replacement]) =>
       FilteringTextInputFormatter.deny(this,
           replacementString: replacement ?? '');
+}
+
+extension Zxcvbnm on PolylineRequest {
+  Future<List<PolylineResult>> obtainRouteWithAlternatives(
+          {String? googleApiKey}) =>
+      mpp.getRouteWithAlternatives(request: this, googleApiKey: googleApiKey);
+
+  Future obtainRouteBetweenLatLong({String? googleApiKey}) =>
+      mpp.getRouteBetweenCoordinates(request: this, googleApiKey: googleApiKey);
 }
 
 extension Decor on ImageProvider {
@@ -128,7 +136,7 @@ extension Decor on ImageProvider {
           repeat: repeat ?? ImageRepeat.noRepeat,
           alignment: alignment ?? Alignment.center,
           matchTextDirection: matchTextDirection ?? false,
-          filterQuality: filterQuality ?? FilterQuality.low);
+          filterQuality: filterQuality ?? 'low'.filterQuality);
 }
 
 extension E1 on void Function(DateTime) {
@@ -324,7 +332,7 @@ extension Ext on XFile {
         frameBuilder: frameBuilder ?? getImageLoader,
         errorBuilder: errorBuilder ?? getErrorWidget,
         matchTextDirection: matchTextDirection ?? false,
-        filterQuality: filterQuality ?? FilterQuality.low,
+        filterQuality: filterQuality ?? 'low'.filterQuality,
         excludeFromSemantics: excludeFromSemantics ?? false);
   }
 
@@ -373,12 +381,12 @@ extension Ext on XFile {
                   frameBuilder: frameBuilder ?? getImageLoader,
                   errorBuilder: errorBuilder ?? getErrorWidget,
                   matchTextDirection: matchTextDirection ?? false,
-                  filterQuality: filterQuality ?? FilterQuality.low,
+                  filterQuality: filterQuality ?? 'low'.filterQuality,
                   excludeFromSemantics: excludeFromSemantics ?? false);
             } else if (list.hasError) {
-              return Text(list.error.string);
+              return list.error.string.textWidget();
             } else if (!list.hasData) {
-              return const Text('No Data');
+              return 'No Data'.textWidget();
             } else {
               return const CircularLoader();
             }
@@ -395,28 +403,6 @@ extension Ext on XFile {
 
     return FutureBuilder<Uint8List>(future: bytes, builder: picBuilder);
   }
-}
-
-extension Tips on LocalAuthentication {
-  Future<bool> get isGadgetSupported => isDeviceSupported();
-
-  Future<bool> get isAuthenticationStopped => stopAuthentication();
-
-  Future<List<BiometricType>> get availableBiometrics =>
-      getAvailableBiometrics();
-
-  Future<bool> confirm(String message,
-          [AuthenticationOptions? options,
-          Iterable<AuthMessages>? authMessages]) =>
-      authenticate(
-          localizedReason: message.trimmed,
-          options: options ?? const AuthenticationOptions(),
-          authMessages: authMessages ??
-              const <AuthMessages>[
-                IOSAuthMessages(),
-                AndroidAuthMessages(),
-                WindowsAuthMessages()
-              ]);
 }
 
 extension Spares on Icon {
@@ -516,6 +502,35 @@ extension Jury on IosUtsname {
       e.jot();
     }
     return data;
+  }
+}
+
+extension Fut on Fraction {
+  Widget getRatingWidget(
+      {MainAxisSize? mainAxisSize,
+      TextBaseline? textBaseline,
+      TextDirection? textDirection,
+      VerticalDirection? verticalDirection,
+      MainAxisAlignment? mainAxisAlignment,
+      CrossAxisAlignment? crossAxisAlignment}) {
+    if (numerator > denominator) {
+      return const EmptyWidget();
+    } else {
+      final lw = numerator.lower, list = List<Icon>.generate(lw, obtainStar);
+      if (numerator > lw) {
+        list.add(Icons.star_half.iconBuilder(color: shades.kGold1));
+      }
+      list.addAll(List<Icon>.generate(
+          denominator - lw - (numerator - lw).upper, obtainStarOutline));
+      return Row(
+          textBaseline: textBaseline,
+          textDirection: textDirection,
+          mainAxisSize: mainAxisSize ?? MainAxisSize.max,
+          verticalDirection: verticalDirection ?? VerticalDirection.down,
+          mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.start,
+          crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
+          children: list);
+    }
   }
 }
 
@@ -647,15 +662,39 @@ extension Extra on Iterable<num> {
     }
   }
 
-  num nthLargest(int n) {
+  num get smallestNumber {
     if (isEmpty) {
+      return -1;
+    } else if (length == 1) {
+      return first;
+    } else {
+      num val = first;
+      for (num i in this) {
+        val = min(i, val);
+      }
+      return val;
+    }
+  }
+
+  num nthLargest(int n) {
+    if (isEmpty || n == 0) {
       return '0'.toNum();
     } else if (length == 1) {
       return single;
     } else {
-      final ls = [...this];
-      ls.sort();
-      return ls[ls.length - n];
+      final ls = [...this]..sort();
+      return ls[length - n];
+    }
+  }
+
+  num nthSmallest(int n) {
+    if (isEmpty || n == 0) {
+      return '0'.toNum();
+    } else if (length == 1) {
+      return single;
+    } else {
+      final ls = [...this]..sort();
+      return ls[n - 1];
     }
   }
 }
@@ -669,7 +708,7 @@ extension Benefit on DateTime {
     return other.year == year && other.month == month && other.day == day;
   }
 
-  bool hasPassed(DateTime other) {
+  bool isB4(DateTime other) {
     if (year < other.year) {
       return true;
     } else if (year == other.year) {
@@ -679,7 +718,7 @@ extension Benefit on DateTime {
     }
   }
 
-  bool isYetToPass(DateTime other) {
+  bool hasPassed(DateTime other) {
     if (year > other.year) {
       return true;
     } else if (year == other.year) {
@@ -1160,13 +1199,26 @@ extension Benefit on DateTime {
   }
 }
 
-extension Assist on Map<String, dynamic> {
+extension Assist on Map<String, Object?> {
   AppConfig get appConfig => AppConfig.fromJson(this);
 
   FormData formData(
           [ListFormat? collectionFormat, bool? camelCaseContentDisposition]) =>
       FormData.fromMap(this, collectionFormat ?? ListFormat.multi,
           camelCaseContentDisposition ?? false);
+}
+
+extension Use on DeviceInfoPlugin {
+  Future<bool> get isRealDevice async {
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.iOS:
+        return isIOS && (await iosInfo).isPhysicalDevice;
+      case TargetPlatform.android:
+        return isAndroid && (await androidInfo).isPhysicalDevice;
+      default:
+        return true;
+    }
+  }
 }
 
 extension Spare on AndroidBuildVersion {
@@ -1184,19 +1236,6 @@ extension Spare on AndroidBuildVersion {
       e.jot();
     }
     return data;
-  }
-}
-
-extension Use on DeviceInfoPlugin {
-  Future<bool> get isRealDevice async {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.iOS:
-        return isIOS && (await iosInfo).isPhysicalDevice;
-      case TargetPlatform.android:
-        return isAndroid && (await androidInfo).isPhysicalDevice;
-      default:
-        return true;
-    }
   }
 }
 
@@ -1228,6 +1267,50 @@ extension Tip on BoxConstraints {
   double get avgHeight => (minHeight + maxHeight) / 2;
 
   double get avgRadius => (minRadius + maxRadius) / 2;
+}
+
+extension Hand on ImageSource {
+  bool get isSupported => mp.supportsImageSource(this);
+
+  Future<XFile?> chooseMedium(
+      {PickType? type,
+      double? maxWidth,
+      double? maxHeight,
+      int? imageQuality,
+      Duration? maxDuration,
+      bool? requestFullMetadata,
+      CameraDevice? preferredCameraDevice}) async {
+    try {
+      switch (type) {
+        case PickType.image:
+          return mp.pickImage(
+              source: this,
+              maxWidth: maxWidth,
+              maxHeight: maxHeight,
+              imageQuality: imageQuality,
+              requestFullMetadata: requestFullMetadata ?? true,
+              preferredCameraDevice:
+                  preferredCameraDevice ?? CameraDevice.rear);
+        case PickType.media:
+          return mp.pickMedia(
+              maxWidth: maxWidth,
+              maxHeight: maxHeight,
+              imageQuality: imageQuality,
+              requestFullMetadata: requestFullMetadata ?? true);
+        case PickType.video:
+          return mp.pickVideo(
+              source: this,
+              maxDuration: maxDuration,
+              preferredCameraDevice:
+                  preferredCameraDevice ?? CameraDevice.rear);
+        default:
+          return null;
+      }
+    } catch (e) {
+      e.jot();
+      return null;
+    }
+  }
 }
 
 extension Avail on num {
@@ -1273,6 +1356,8 @@ extension Avail on num {
 
   num get radians => (this * pi) / 180;
 
+  Fraction get fraction => toFraction();
+
   double get approximate => roundToDouble();
 
   num toThePowerOf(num exp) => pow(this, exp);
@@ -1290,33 +1375,6 @@ extension Avail on num {
           ? squareRoot * squareRoot == this
           : (string.split('.').last.length % 2 == 0 &&
               string.split('.').join().toInt().isPerfectSquare));
-
-  Widget getRatingWidget(int total,
-      {MainAxisSize? mainAxisSize,
-      TextBaseline? textBaseline,
-      TextDirection? textDirection,
-      VerticalDirection? verticalDirection,
-      MainAxisAlignment? mainAxisAlignment,
-      CrossAxisAlignment? crossAxisAlignment}) {
-    if (this > total) {
-      return const EmptyWidget();
-    } else {
-      final list = List<Icon>.generate(lower, obtainStar);
-      if (this - lower > 0) {
-        list.add(Icon(Icons.star_half, color: shades.kGold1));
-      }
-      list.addAll(List<Icon>.generate(
-          total - lower - (this - lower).upper, obtainStarOutline));
-      return Row(
-          textBaseline: textBaseline,
-          textDirection: textDirection,
-          mainAxisSize: mainAxisSize ?? MainAxisSize.max,
-          verticalDirection: verticalDirection ?? VerticalDirection.down,
-          mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.start,
-          crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
-          children: list);
-    }
-  }
 }
 
 extension Help on int {
@@ -1328,11 +1386,11 @@ extension Help on int {
 
   bool get eitherZeroOrOne => <int>[0, 1].contains(this);
 
-  Icon get filledStar => Icon(Icons.star, color: shades.kGold1);
+  Icon get filledStar => Icons.star.iconBuilder(color: shades.kGold1);
 
   bool get isAdam => square.integer == reversed.square.integer.reversed;
 
-  Icon get outlinedStar => Icon(Icons.star_border, color: shades.kGold1);
+  Icon get outlinedStar => Icons.star_border.iconBuilder(color: shades.kGold1);
 
   MaterialColor getMaterialColor(Map<int, Color> swatch) =>
       MaterialColor(this, swatch);
@@ -1510,6 +1568,24 @@ extension Help on int {
 extension PlaceUtils on LatLng {
   CameraUpdate get cameraUpdate => CameraUpdate.newLatLng(this);
 
+  PointLatLng get pointLatLng => PointLatLng(latitude, longitude);
+
+  Future<List<Placemark>> get places =>
+      placemarkFromCoordinates(latitude, longitude);
+
+  bool verifyDistance(LatLng other) =>
+      distanceTo(other) == haversineDistanceTo(other);
+
+  Map<String, double> get map =>
+      <String, double>{'longitude': longitude, 'latitude': latitude};
+
+  Location get loc => Location(
+      latitude: latitude, longitude: longitude, timestamp: DateTime.now());
+
+  double distanceTo(LatLng other) =>
+      gl.distanceBetween(latitude, longitude, other.latitude, other.longitude) /
+      1000;
+
   CameraPosition getCameraPosition(
           {double? tilt, double? zoom, double? bearing}) =>
       CameraPosition(
@@ -1517,22 +1593,6 @@ extension PlaceUtils on LatLng {
           tilt: tilt ?? 0.0,
           zoom: zoom ?? 0.0,
           bearing: bearing ?? 0.0);
-
-  bool verifyDistance(LatLng other) =>
-      distanceTo(other) == haversineDistanceTo(other);
-
-  Future<List<Placemark>> get places =>
-      placemarkFromCoordinates(latitude, longitude);
-
-  Map<String, double> get map =>
-      <String, double>{'longitude': longitude, 'latitude': latitude};
-
-  Location get loc =>
-      Location(latitude: latitude, longitude: longitude, timestamp: today);
-
-  double distanceTo(LatLng other) =>
-      gl.distanceBetween(latitude, longitude, other.latitude, other.longitude) /
-      1000;
 
   double get earthRadius {
     final eqRadSq = 6378.137.square,
@@ -1612,7 +1672,11 @@ extension Utils on String {
 
   String get fileExtension => split('.').last.trimmed;
 
+  Fraction get fraction => Fraction.fromString(trimmed);
+
   String get currencySymbol => nf.simpleCurrencySymbol(this);
+
+  List<PointLatLng> get points => mpp.decodePolyline(trimmed);
 
   T? valFromConfig<T extends Object?>() => gc?.getValue<T>(trimmed);
 
@@ -1649,14 +1713,17 @@ extension Utils on String {
   getDecoded([Object? Function(Object?, Object?)? reviver]) =>
       jsonDecode(this, reviver: reviver);
 
-  AssetImage ipFromAsset([String? package, AssetBundle? bundle]) =>
-      AssetImage(this, package: package, bundle: bundle);
-
   int numberFromEnv([int? defaultVal]) =>
       int.fromEnvironment(trimmed, defaultValue: defaultVal ?? 0);
 
+  AssetImage ipFromAsset([String? package, AssetBundle? bundle]) =>
+      AssetImage(this, package: package, bundle: bundle);
+
   String stringFromEnv([String? defaultVal]) =>
       String.fromEnvironment(trimmed, defaultValue: defaultVal ?? '');
+
+  PolylineWayPoint toWayPoint({bool? stopOver}) =>
+      PolylineWayPoint(location: trimmed, stopOver: stopOver ?? true);
 
   bool flagFromEnv([bool? defaultVal]) =>
       bool.fromEnvironment(trimmed, defaultValue: defaultVal ?? false);
@@ -1682,6 +1749,9 @@ extension Utils on String {
 
   bool get isValidEmail =>
       mailExp.hasMatch(trimmed) && mailExp.allMatches(trimmed).length == 1;
+
+  TextTheme getTextThemeFromFontFamily([TextTheme? textTheme]) =>
+      GoogleFonts.getTextTheme(trimmed.firstLetterCapitalized, textTheme);
 
   bool get isValidName => trimmed.isNotEmpty
       // && trimmed.length >= minimumUserNameLength
@@ -1830,7 +1900,7 @@ extension Utils on String {
           alignment: alignment ?? Alignment.center,
           gaplessPlayback: gaplessPlayback ?? false,
           matchTextDirection: matchTextDirection ?? false,
-          filterQuality: filterQuality ?? FilterQuality.low,
+          filterQuality: filterQuality ?? 'low'.filterQuality,
           excludeFromSemantics: excludeFromSemantics ?? false);
 
   CrossAxisAlignment? get caa {
@@ -2055,6 +2125,27 @@ extension Utils on String {
     }
   }
 
+  FilterQuality get filterQuality {
+    switch (trimmed.lowerCased) {
+      case 'big':
+      case 'high':
+      case 'more':
+        return FilterQuality.high;
+      case 'low':
+      case 'less':
+      case 'small':
+        return FilterQuality.low;
+      case 'middle':
+      case 'medium':
+      case 'average':
+        return FilterQuality.medium;
+      case 'null':
+      case 'none':
+      default:
+        return FilterQuality.none;
+    }
+  }
+
   ReadMoreText readMore(
           {Key? key,
           Locale? locale,
@@ -2181,32 +2272,15 @@ extension Utils on String {
   DateTime get dateTime {
     final re1 = r'-'.getRE(), re2 = r'/'.getRE(), re3 = r'.'.getRE();
     if (trimmed.isEmpty) {
-      return today;
+      return DateTime.now();
     } else if (re1.hasMatch(trimmed) && re1.allMatches(trimmed).length == 2) {
-      return DateTime.tryParse(trimmed) ?? today;
+      return DateTime.tryParse(trimmed) ?? DateTime.now();
     } else if (re2.hasMatch(trimmed) && re2.allMatches(trimmed).length == 2) {
-      return DateTime.tryParse(trimmed.replaceAll('/', '-')) ?? today;
+      return DateTime.tryParse(trimmed.replaceAll('/', '-')) ?? DateTime.now();
     } else if (re3.hasMatch(trimmed) && re3.allMatches(trimmed).length == 2) {
-      return DateTime.tryParse(trimmed.replaceAll('.', '-')) ?? today;
+      return DateTime.tryParse(trimmed.replaceAll('.', '-')) ?? DateTime.now();
     } else {
-      return today;
-    }
-  }
-
-  TimeOfDay get time {
-    try {
-      final re = r':'.getRE();
-      if (trimmed.isEmpty ||
-          !(re.hasMatch(trimmed) &&
-              <int>[1, 2].contains(re.allMatches(trimmed).length))) {
-        return thisMoment;
-      } else {
-        final a = trimmed.split(':');
-        return TimeOfDay(hour: a.first.toInt(), minute: a[1].toInt());
-      }
-    } catch (e) {
-      e.jot();
-      return thisMoment;
+      return DateTime.now();
     }
   }
 
@@ -2214,7 +2288,7 @@ extension Utils on String {
     try {
       final ds = split(' '),
           dd = ds.first.dateTime,
-          td = ds[1].parseTime(ds.last),
+          td = ds[1].toTime(ds.last),
           trailingZeroHour = td.hour.toString().length == 1 ? '0' : '',
           trailingZeroMinute = td.minute.toString().length == 1 ? '0' : '';
       return '${fmd1.format(dd)}, ${dd.year} ($trailingZeroHour${td.hour}:$trailingZeroMinute${td.minute} Hrs)';
@@ -2237,30 +2311,29 @@ extension Utils on String {
     }
   }
 
-  TimeOfDay parseTime([String? meridiem]) {
+  TimeOfDay toTime([String? meridiem]) {
     if (trimmed.isNotEmpty &&
         r':'.getRE().hasMatch(trimmed) &&
         <int>[1, 2].contains(':'.allMatches(trimmed).length)) {
-      if (!r'\s+\b|\b\s|\s|\b'.getRE().hasMatch(trimmed)) {
+      final hasMatch = r'\s+\b|\b\s|\s|\b'.getRE().hasMatch(trimmed);
+      if (!hasMatch) {
         final a = trimmed.split(':');
         final hr = a.first.toInt(null, 0) +
             (meridiem?.lowerCased.trimmed == 'pm' ? 12 : 0);
         return TimeOfDay(hour: hr, minute: a[1].toInt(null, 0));
-      } else if (r'\s+\b|\b\s|\s|\b'.getRE().hasMatch(trimmed) &&
-          r'[a-zA-Z]'.getRE().hasMatch(trimmed)) {
+      } else if (hasMatch && r'[a-zA-Z]'.getRE().hasMatch(trimmed)) {
         final a = trimmed.split(' ');
         final a1 = a.first.split(':');
         final hr = a1.first.toInt(null, 0) +
             (a.last.trimmed.lowerCased == 'pm' ? 12 : 0);
         return TimeOfDay(hour: hr, minute: a1[1].toInt(null, 0));
-      } else if (r'\s+\b|\b\s|\s|\b'.getRE().hasMatch(trimmed) &&
-          !today.isAtSameMomentAs(dateTime)) {
+      } else if (hasMatch && !DateTime.now().isAtSameMomentAs(dateTime)) {
         return TimeOfDay.fromDateTime(dateTime);
       } else {
-        return thisMoment;
+        return TimeOfDay.now();
       }
     } else {
-      return thisMoment;
+      return TimeOfDay.now();
     }
   }
 

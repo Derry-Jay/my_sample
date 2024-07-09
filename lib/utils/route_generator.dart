@@ -61,12 +61,12 @@ class RouteGenerator {
                     child: c5);
               case TransitionType.scale:
                 return ScaleTransition(scale: a1, child: c5);
-              case TransitionType.size:
-                return SizeTransition(sizeFactor: a1, child: c5);
-              case TransitionType.rotate:
-                return RotationTransition(turns: a2, child: c5);
               case TransitionType.fade:
                 return FadeTransition(opacity: a1, child: c5);
+              case TransitionType.rotate:
+                return RotationTransition(turns: a2, child: c5);
+              case TransitionType.size:
+                return SizeTransition(sizeFactor: a1, child: c5);
               default:
                 return pageBuilder(ct6);
             }
@@ -103,7 +103,7 @@ class RouteGenerator {
     switch (defaultTargetPlatform) {
       case TargetPlatform.iOS:
       case TargetPlatform.macOS:
-        return CupertinoPageRoute(builder: pageBuilder);
+        return CupertinoPageRoute(builder: pageBuilder, settings: settings);
       default:
         return (_shouldPerformTransition ?? false)
             ? PageRouteBuilder(

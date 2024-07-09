@@ -15,6 +15,7 @@ class AppRoot extends StatelessWidget {
   final CupertinoThemeData? themeApple;
   final Duration? themeAnimationDuration;
   final Map<Type, Action<Intent>>? actions;
+  final Map<String, WidgetBuilder>? routes;
   final Iterable<Locale>? supportedLocales;
   final AnimationStyle? themeAnimationStyle;
   final GlobalKey<NavigatorState>? navigatorKey;
@@ -23,7 +24,6 @@ class AppRoot extends StatelessWidget {
   final String Function(BuildContext)? onGenerateTitle;
   final String? title, initialRoute, restorationScopeId;
   final Widget Function(BuildContext, Widget?)? builder;
-  final Map<String, Widget Function(BuildContext)>? routes;
   final GlobalKey<ScaffoldMessengerState>? scaffoldMessengerKey;
   final List<Route<dynamic>> Function(String)? onGenerateInitialRoutes;
   final bool Function(NavigationNotification)? onNavigationNotification;

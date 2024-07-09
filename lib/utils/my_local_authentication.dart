@@ -12,11 +12,18 @@ class MyLocalAuthentication extends LocalAuthentication {
 
   MyLocalAuthentication._internal();
 
+  Future<bool> get isGadgetSupported => isDeviceSupported();
+
+  Future<bool> get isAuthenticationStopped => stopAuthentication();
+
+  Future<List<BiometricType>> get availableBiometrics =>
+      getAvailableBiometrics();
+
   Future<bool> confirm(String message,
           [AuthenticationOptions? options,
           Iterable<AuthMessages>? authMessages]) =>
       authenticate(
+          options: options ?? authOptions,
           localizedReason: message.trimmed,
-          authMessages: authMessages ?? authMsgs,
-          options: options ?? const AuthenticationOptions());
+          authMessages: authMessages ?? authMsgs);
 }

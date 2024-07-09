@@ -6,14 +6,12 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:june/june.dart';
 
 import '../extensions/extensions.dart';
 import '../states/common_state.dart';
 import '../views/widgets/common/circular_loader.dart';
 import 'enums.dart';
-import 'values.dart';
 
 void rollbackOrientations() async {
   await SystemChrome.setPreferredOrientations([
@@ -46,7 +44,7 @@ void hideLoader({Duration? time, LoaderType? type}) {
     }
   }
 
-  time.getTimer(removeLoader).cancel();
+  time?.getTimer(removeLoader).cancel();
 }
 
 void doNothing() {}
@@ -86,7 +84,7 @@ String emptyString() => '';
 CommonState obtainCommonState() => CommonState();
 
 bool onBadCertificate(X509Certificate cert, String host, int port) {
-  return true;
+  return cert.isValid;
 }
 
 bool isImagePath(String str) {
@@ -183,20 +181,9 @@ Uint8List fromIntList(List<int> list) {
 Widget errorBuilder(BuildContext context, Object object, StackTrace? trace) {
   object.jot();
   trace.jot();
-  return Icon(Icons.error,
-      size: context.height / 16, color: context.themeMaterial.secondaryHeaderColor);
-}
-
-Widget getAppleContextMenuBuilder(
-    BuildContext context, EditableTextState editableTextState) {
-  return CupertinoAdaptiveTextSelectionToolbar.editableText(
-      editableTextState: editableTextState);
-}
-
-Widget getContextMenuBuilder(
-    BuildContext context, EditableTextState editableTextState) {
-  return AdaptiveTextSelectionToolbar.editableText(
-      editableTextState: editableTextState);
+  return Icons.error.iconBuilder(
+      size: context.height / 16,
+      color: context.themeMaterial.secondaryHeaderColor);
 }
 
 Widget getImageLoader(BuildContext context, Widget child, int? i, bool flag) {
@@ -205,25 +192,11 @@ Widget getImageLoader(BuildContext context, Widget child, int? i, bool flag) {
   return child;
 }
 
-// Widget getPlaceHolderNoImage(BuildContext context, String url) {
-//   return Image.asset('${assetImagePath}noImage.png',
-//       height: context.height / 12.8,
-//       width: context.width / 6.4,
-//       fit: BoxFit.fill);
-// }
-
 Widget getErrorWidget(BuildContext context, Object object, StackTrace? trace) {
   object.jot();
   trace.jot();
-  return Text(object.string);
+  return object.string.textWidget();
 }
-
-// Widget getErrorWidget(BuildContext context, String url, dynamic error) {
-//   return Image.asset('${assetImagePath}noImage.png',
-//       height: context.height / 12.8,
-//       width: context.width / 6.4,
-//       fit: BoxFit.fill);
-// }
 
 String? validateName(String? name) =>
     (name?.isEmpty ?? true) ? 'Enter a valid Name' : null;
@@ -249,42 +222,4 @@ Future<Uint8List> getBytesFromAsset(String path,
   return (await fi.image.toByteData(format: ImageByteFormat.png))!
       .buffer
       .asUint8List();
-}
-
-Future<XFile?> chooseMedium(ImageSource source,
-    {PickType? type,
-    double? maxWidth,
-    double? maxHeight,
-    int? imageQuality,
-    Duration? maxDuration,
-    bool? requestFullMetadata,
-    CameraDevice? preferredCameraDevice}) async {
-  try {
-    switch (type) {
-      case PickType.image:
-        return picker.pickImage(
-            source: source,
-            maxWidth: maxWidth,
-            maxHeight: maxHeight,
-            imageQuality: imageQuality,
-            requestFullMetadata: requestFullMetadata ?? true,
-            preferredCameraDevice: preferredCameraDevice ?? CameraDevice.rear);
-      case PickType.media:
-        return picker.pickMedia(
-            maxWidth: maxWidth,
-            maxHeight: maxHeight,
-            imageQuality: imageQuality,
-            requestFullMetadata: requestFullMetadata ?? true);
-      case PickType.video:
-        return picker.pickVideo(
-            source: source,
-            maxDuration: maxDuration,
-            preferredCameraDevice: preferredCameraDevice ?? CameraDevice.rear);
-      default:
-        return null;
-    }
-  } catch (e) {
-    e.jot();
-    return null;
-  }
 }

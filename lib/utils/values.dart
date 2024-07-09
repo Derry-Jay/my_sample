@@ -5,9 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +26,8 @@ import 'methods.dart';
 import 'my_geo_locator.dart';
 import 'my_geocoder.dart';
 import 'my_local_authentication.dart';
+import 'my_media_picker.dart';
+import 'my_polyline_points.dart';
 import 'route_generator.dart';
 
 int page = 0;
@@ -46,8 +46,14 @@ StreamSubscription<Progress>? ssc;
 
 Map<String, dynamic> body = <String, dynamic>{};
 
-const apiMode =
-    kDebugMode ? APIMode.dev : (kProfileMode ? APIMode.test : APIMode.prod);
+const authOptions = AuthenticationOptions(),
+    apiMode =
+        kDebugMode ? APIMode.dev : (kProfileMode ? APIMode.test : APIMode.prod),
+    authMsgs = <AuthMessages>[
+      IOSAuthMessages(),
+      AndroidAuthMessages(),
+      WindowsAuthMessages()
+    ];
 
 final css = Css(),
     st = Stopwatch(),
@@ -55,8 +61,8 @@ final css = Css(),
     gco = MyGeocoder(),
     gl = MyGeoLocator(),
     nf = NumberFormat(),
+    mp = MyMediaPicker(),
     conn = Connectivity(),
-    picker = ImagePicker(),
     today = DateTime.now(),
     fmd1 = DateFormat.MMMd(),
     dip = DeviceInfoPlugin(),
@@ -73,17 +79,18 @@ final css = Css(),
     edc = TextEditingController(),
     rg = RouteGenerator(flag: true),
     isPortable = isAndroid || isIOS,
-    polylinePoints = PolylinePoints(),
+    mpp = MyPolylinePoints(),
+    alphaNumExp = r'^[a-zA-Z0-9]+$'.getRE(),
     cm = getState<CommonState>(obtainCommonState),
     sharedPrefs = SharedPreferences.getInstance(),
     isIOS = Platform.isIOS && defaultTargetPlatform == TargetPlatform.iOS,
+    minPwdLth = 'minimum_password_length'.valFromConfig<String>()?.toInt() ?? 8,
     isAndroid =
         Platform.isAndroid && defaultTargetPlatform == TargetPlatform.android,
     isWindows =
         Platform.isWindows && defaultTargetPlatform == TargetPlatform.windows,
     isFuchsia =
         Platform.isFuchsia && defaultTargetPlatform == TargetPlatform.fuchsia,
-    minPwdLth = 'minimum_password_length'.valFromConfig<String>()?.toInt() ?? 8,
     maxPwdLth =
         'maximum_password_length'.valFromConfig<String>()?.toInt() ?? 16,
     isMac = Platform.isMacOS && defaultTargetPlatform == TargetPlatform.macOS,
@@ -92,17 +99,11 @@ final css = Css(),
         'splash_screen_delay'.valFromConfig<String>()?.toInt() ?? 3,
     isWeb = kIsWeb &&
         !(isAndroid || isCupertino || isWindows || isLinux || isFuchsia),
-    alphaNumExp = r'^[a-zA-Z0-9]+$'.getRE(),
     pwdExp =
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$&*~]).{8,}$'.getRE(),
     mailExp =
         r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$"
             .getRE(),
-            authMsgs = const <AuthMessages>[
-                IOSAuthMessages(),
-                AndroidAuthMessages(),
-                WindowsAuthMessages()
-              ],
     minDesignSize = <double>[
       'minimum_screen_width'.valFromConfig<String>()?.toDouble() ?? double.nan,
       'minimum_screen_height'.valFromConfig<String>()?.toDouble() ?? double.nan
