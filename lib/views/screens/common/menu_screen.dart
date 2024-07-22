@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../extensions/extensions.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -70,6 +72,8 @@ class MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        bottomNavigationBar:
+            FlutterFlowIconButton(icon: Icons.abc.iconBuilder()),
         appBar: AppBar(
           title: Text(_items1.isNotEmpty ? _items1[0]['App_Name'] : ''),
           flexibleSpace: Container(
@@ -87,125 +91,125 @@ class MenuScreenState extends State<MenuScreen> {
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(25),
-          child: Column(
-            children: [
-              // Display the data loaded from my_json.json
-              _items.isNotEmpty
-                  ? Expanded(
-                      child: ListView.builder(
-                        itemCount: _items.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 8,
-                            shadowColor: Colors.blue,
-                            margin: EdgeInsets.all(10),
-                            child: ListTile(
-                              // leading: Text(_items[index]["Department_Code"]),
-                              title: Text(_items[index]['MenuScreenName']),
-                              onTap: () {
-                                subMenuScreen =
-                                    _items[index]['SubMenuScreenType'];
-                                switch (subMenuScreen) {
-                                  case 'DataTable':
-                                    // URL_PATH=_items2[index]["URL_Path"];
-                                    // jsonFile=_items2[index]["JsonFile"];
-                                    // data_source=_items1.isNotEmpty ? _items1[0]["DataSource"] : "";
-                                    // print(data_source);
-                                    // print(URL_PATH);
-                                    // print(jsonFile);
-                                    // if(data_source == "local")  {
-                                    //   print("ifPart");
-                                    //   Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(builder: (context) =>
-                                    //         datatable1(_items[index]["MenuScreenId"])),
-                                    //   );
-                                    // }
-                                    // else if(data_source == "online"){
-                                    //   print("elseifPart");
-                                    //   Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(builder: (context) =>
-                                    //         MyApp(_items[index]["MenuScreenId"]),
-                                    //     ));
-                                    // }
-                                    // else{
-                                    //   print("DataSource Not Available");
-                                    // }
-                                    break;
-                                  case 'JsonTable':
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context)=>final_MenuScreen(_items[index]["MenuScreenId"])),
-                                    // );
-                                    break;
-                                  case 'Google Map':
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //       builder: (context) => mapscreen1(
-                                    //           _items[index]['MenuScreenId'])),
-                                    // );
-                                    break;
-                                  case 'OSM':
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context)=>MyHomePage(_items[index]["MenuScreenId"])),
-                                    // );
-                                    break;
-                                  case 'PieChart':
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context)=>pie_chart(_items[index]["MenuScreenId"])),
-                                    // );
-                                    break;
-                                  case 'BarChart':
-                                    data_source = _items1.isNotEmpty
-                                        ? _items1[0]['DataSource']
-                                        : '';
-                                    print(data_source);
-                                    // print(URL_PATH);
-                                    // print(jsonFile);
-                                    if (data_source == 'local') {
-                                      print('ifPart');
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(builder: (context)=>barchart(_items[index]["MenuScreenId"])),
-                                      // );
-                                    } else if (data_source == 'online') {
-                                      print('elseifPart');
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(builder: (context) =>
-                                      //         barchartJson(_items[index]["MenuScreenId"]),
-                                      //     ));
-                                    } else {
-                                      print('DataSource Not Available');
-                                    }
-                                    break;
-                                  case 'PhotoGallery':
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context)=>singlephotogallery(_items[index]["MenuScreenId"])),
-                                    // );
-                                    break;
-                                  case 'GridPhotoGallery':
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context)=>gridphotogallery(_items[index]["MenuScreenId"])),
-                                    // );
-                                    break;
-                                }
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    )
-                  : Container()
-            ],
-          ),
-        ));
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              children: [
+                // Display the data loaded from my_json.json
+                // _items.isNotEmpty
+                //     ? Expanded(
+                //         child: ListView.builder(
+                //           itemCount: _items.length,
+                //           itemBuilder: (context, index) {
+                //             return Card(
+                //               elevation: 8,
+                //               shadowColor: Colors.blue,
+                //               margin: EdgeInsets.all(10),
+                //               child: ListTile(
+                //                 // leading: Text(_items[index]["Department_Code"]),
+                //                 title: Text(_items[index]['MenuScreenName']),
+                //                 onTap: () {
+                //                   subMenuScreen =
+                //                       _items[index]['SubMenuScreenType'];
+                //                   switch (subMenuScreen) {
+                //                     case 'DataTable':
+                //                       // URL_PATH=_items2[index]["URL_Path"];
+                //                       // jsonFile=_items2[index]["JsonFile"];
+                //                       // data_source=_items1.isNotEmpty ? _items1[0]["DataSource"] : "";
+                //                       // print(data_source);
+                //                       // print(URL_PATH);
+                //                       // print(jsonFile);
+                //                       // if(data_source == "local")  {
+                //                       //   print("ifPart");
+                //                       //   Navigator.push(
+                //                       //     context,
+                //                       //     MaterialPageRoute(builder: (context) =>
+                //                       //         datatable1(_items[index]["MenuScreenId"])),
+                //                       //   );
+                //                       // }
+                //                       // else if(data_source == "online"){
+                //                       //   print("elseifPart");
+                //                       //   Navigator.push(
+                //                       //     context,
+                //                       //     MaterialPageRoute(builder: (context) =>
+                //                       //         MyApp(_items[index]["MenuScreenId"]),
+                //                       //     ));
+                //                       // }
+                //                       // else{
+                //                       //   print("DataSource Not Available");
+                //                       // }
+                //                       break;
+                //                     case 'JsonTable':
+                //                       // Navigator.push(
+                //                       //   context,
+                //                       //   MaterialPageRoute(builder: (context)=>final_MenuScreen(_items[index]["MenuScreenId"])),
+                //                       // );
+                //                       break;
+                //                     case 'Google Map':
+                //                       // Navigator.push(
+                //                       //   context,
+                //                       //   MaterialPageRoute(
+                //                       //       builder: (context) => mapscreen1(
+                //                       //           _items[index]['MenuScreenId'])),
+                //                       // );
+                //                       break;
+                //                     case 'OSM':
+                //                       // Navigator.push(
+                //                       //   context,
+                //                       //   MaterialPageRoute(builder: (context)=>MyHomePage(_items[index]["MenuScreenId"])),
+                //                       // );
+                //                       break;
+                //                     case 'PieChart':
+                //                       // Navigator.push(
+                //                       //   context,
+                //                       //   MaterialPageRoute(builder: (context)=>pie_chart(_items[index]["MenuScreenId"])),
+                //                       // );
+                //                       break;
+                //                     case 'BarChart':
+                //                       data_source = _items1.isNotEmpty
+                //                           ? _items1[0]['DataSource']
+                //                           : '';
+                //                       print(data_source);
+                //                       // print(URL_PATH);
+                //                       // print(jsonFile);
+                //                       if (data_source == 'local') {
+                //                         print('ifPart');
+                //                         // Navigator.push(
+                //                         //   context,
+                //                         //   MaterialPageRoute(builder: (context)=>barchart(_items[index]["MenuScreenId"])),
+                //                         // );
+                //                       } else if (data_source == 'online') {
+                //                         print('elseifPart');
+                //                         // Navigator.push(
+                //                         //     context,
+                //                         //     MaterialPageRoute(builder: (context) =>
+                //                         //         barchartJson(_items[index]["MenuScreenId"]),
+                //                         //     ));
+                //                       } else {
+                //                         print('DataSource Not Available');
+                //                       }
+                //                       break;
+                //                     case 'PhotoGallery':
+                //                       // Navigator.push(
+                //                       //   context,
+                //                       //   MaterialPageRoute(builder: (context)=>singlephotogallery(_items[index]["MenuScreenId"])),
+                //                       // );
+                //                       break;
+                //                     case 'GridPhotoGallery':
+                //                       // Navigator.push(
+                //                       //   context,
+                //                       //   MaterialPageRoute(builder: (context)=>gridphotogallery(_items[index]["MenuScreenId"])),
+                //                       // );
+                //                       break;
+                //                   }
+                //                 },
+                //               ),
+                //             );
+                //           },
+                //         ),
+                //       )
+                //     :
+                'Hi there'.textWidget()
+              ],
+            )));
   }
 }

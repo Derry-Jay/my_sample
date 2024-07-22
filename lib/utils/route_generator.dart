@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../views/screens/common/menu_screen.dart';
 import '/extensions/extensions.dart';
 import '../models/common/route_argument.dart';
 import '../views/screens/common/error_screen.dart';
@@ -25,8 +26,8 @@ class RouteGenerator {
 
     Widget pageBuilder(BuildContext context) {
       switch (settings.name) {
-        // case '/assorted':
-        //   return const AssortedScreen();
+        case '/menu':
+          return const MenuScreen();
         case '/sample':
           return const SampleScreen();
         default:

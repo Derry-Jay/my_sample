@@ -199,6 +199,8 @@ extension ListStringUtils on Iterable<String> {
 }
 
 extension Deputy on double {
+  int get wholeNumber => lower;
+
   Size get sizeFromSquare => Size.square(this);
 
   Size get sizeFromWidth => Size.fromWidth(this);
@@ -210,6 +212,11 @@ extension Deputy on double {
   EdgeInsets get allPadding => EdgeInsets.all(this);
 
   Radius get circularRadius => Radius.circular(this);
+
+  double get decimalPart {
+    final self = this;
+    return self - wholeNumber;
+  }
 
   BorderRadius get circularBorderRadius => BorderRadius.circular(this);
 
@@ -1605,10 +1612,7 @@ extension PlaceUtils on LatLng {
   }
 
   double getAngle(LatLng other) {
-    final
-        // sLong = other.longitude + longitude,
-        dLon = (other.longitude - longitude).absolute,
-        // dLat = (other.latitude - latitude).absolute,
+    final dLon = (other.longitude - longitude).absolute,
         y = dLon.sine * other.longitude.cosine,
         x = latitude.cosine * other.latitude.sine -
             latitude.sine * other.latitude.cosine * dLon.cosine;
@@ -1624,6 +1628,29 @@ extension PlaceUtils on LatLng {
         v3 = (dLat.cosine + sLat.cosine) * dLong.cosine;
     return ((earthRadius + other.earthRadius) *
         ((v1 - v3) / (v2 + v3)).absolute.squareRoot.tanInverse);
+  }
+
+  DateTime get dateTime {
+    DateTime dt = DateTime.now().toUtc();
+    final dur = Duration(
+        hours: longitude.wholeNumber ~/ 15,
+        minutes: (4 * (longitude.wholeNumber % 15)) +
+            (longitude.decimalPart * 4).wholeNumber,
+        seconds: ((longitude.decimalPart * 4).decimalPart * 60).wholeNumber,
+        milliseconds:
+            (((longitude.decimalPart * 4).decimalPart * 60).decimalPart * 1000)
+                .wholeNumber,
+        microseconds:
+            ((((longitude.decimalPart * 4).decimalPart * 60).decimalPart * 1000)
+                        .decimalPart *
+                    1000)
+                .wholeNumber);
+    if (longitude > 0) {
+      dt = dt.add(dur);
+    } else if (longitude < 0) {
+      dt = dt.subtract(dur);
+    } else {}
+    return dt;
   }
 }
 
