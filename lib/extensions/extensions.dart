@@ -1589,6 +1589,9 @@ extension PlaceUtils on LatLng {
   Location get loc => Location(
       latitude: latitude, longitude: longitude, timestamp: DateTime.now());
 
+  double getBearingBetween(LatLng other) =>
+      gl.bearingBetween(latitude, longitude, other.latitude, other.longitude);
+
   double distanceTo(LatLng other) =>
       gl.distanceBetween(latitude, longitude, other.latitude, other.longitude) /
       1000;
@@ -1602,8 +1605,12 @@ extension PlaceUtils on LatLng {
           bearing: bearing ?? 0.0);
 
   double get earthRadius {
-    final eqRadSq = 6378.137.square,
-        poleRadSq = 6356.752.square,
+    final eqRadSq =
+            'earth_equator_radius'.valFromConfig<String>()?.toDouble().square ??
+                0.0,
+        poleRadSq =
+            'earth_polar_radius'.valFromConfig<String>()?.toDouble().square ??
+                0.0,
         poleRad4 = poleRadSq.square,
         latCosSq = latitude.cosine.square,
         v1 = (eqRadSq.square - poleRad4) * latCosSq,
@@ -1708,6 +1715,8 @@ extension Utils on String {
   T? valFromConfig<T extends Object?>() => gc?.getValue<T>(trimmed);
 
   Future<List<Location>> get locations => locationFromAddress(trimmed);
+
+  Locale getLocale({String? countrycode}) => Locale(this, countrycode);
 
   Future<List<Placemark>> get places => gco.placemarkFromAddress(trimmed);
 

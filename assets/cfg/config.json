@@ -18,6 +18,8 @@
   "minimum_screen_height": "812",
   "minimum_password_length": "6",
   "maximum_password_length": "12",
+  "earth_polar_radius": "6356.752",
+  "earth_equator_radius": "6378.137",
   "black_color_variant_1": {
     "alpha": "77",
     "color": "000000"

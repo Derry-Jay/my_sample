@@ -8,6 +8,12 @@ extension StrUt on String? {
 
   NumberFormat get fromLocale => NumberFormat(null, this);
 
+  Locale getFromSubTags({String? scriptCode, String? countryCode}) =>
+      Locale.fromSubtags(
+          scriptCode: scriptCode,
+          countryCode: countryCode,
+          languageCode: this ?? 'und');
+
   ThemeMode? get tm {
     switch (this?.trimmed.lowerCased) {
       case 'dark':

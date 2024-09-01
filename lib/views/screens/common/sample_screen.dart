@@ -9,7 +9,7 @@ class SampleScreen extends StatelessWidget {
   const SampleScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {//example_
     return SafeArea(
         child: ScreenLayout(
             content: 'pt'.textWidget(),
