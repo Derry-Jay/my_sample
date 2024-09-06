@@ -17,7 +17,7 @@ class SplashScreenState extends State<SplashScreen> {
     // TODO: implement build
     return ScreenLayout(
       content: context.nonNullSize.constrainChild(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          child: const Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         // Flexible(
         //     child: ),
         // Flexible(

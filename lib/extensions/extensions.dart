@@ -62,6 +62,18 @@ extension Pad on EdgeInsetsGeometry {
   Padding paddedWidget({Widget? child}) => Padding(padding: this, child: child);
 }
 
+extension Exte on List<DeviceOrientation> {
+  void setAllowedOrientations() async {
+    await SystemChrome.setPreferredOrientations(this);
+  }
+}
+
+extension Exten on SystemUiMode {
+  void setSystemUIMode([List<SystemUiOverlay>? overlays]) async {
+    await SystemChrome.setEnabledSystemUIMode(this, overlays: overlays);
+  }
+}
+
 extension Asdfgh on X509Certificate {
   bool get isValid =>
       (DateTime.now().isAfter(startValidity) ||
@@ -1731,6 +1743,8 @@ extension Utils on String {
   Uri toUri({int? start, int? end}) =>
       Uri.tryParse(trimmed, start ?? 0, end) ?? Uri();
 
+  Future<ByteData> get byteData => rootBundle.load(this);
+
   Future<String> loadFromAssets([bool? cache]) =>
       rootBundle.loadString(this, cache: cache ?? true);
 
@@ -1889,6 +1903,15 @@ extension Utils on String {
           unicode: unicode ?? false,
           multiLine: multiLine ?? false,
           caseSensitive: caseSensitive ?? true);
+
+  Future<Uint8List?> getBytesFromAsset({int? width, int? height}) async {
+    final data = await byteData;
+    final codec = await data.buffer
+        .asUint8List()
+        .setImageCodec(targetWidth: width, targetHeight: height);
+    final fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ImageByteFormat.png))?.buffer.asUint8List();
+  }
 
   Image getFromAsset(
           {Key? key,

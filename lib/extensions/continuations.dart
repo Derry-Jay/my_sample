@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import 'extensions.dart';
@@ -36,6 +39,15 @@ extension SizeUt on Size? {
 extension DoubUt on double? {
   Widget squareConstrainChild({Widget? child}) =>
       SizedBox.square(dimension: this, child: child);
+}
+
+extension Extension on Uint8List {
+  Future<Codec> setImageCodec(
+          {int? targetWidth, int? targetHeight, bool? allowUpscaling}) =>
+      instantiateImageCodec(this,
+          targetWidth: targetWidth,
+          targetHeight: targetHeight,
+          allowUpscaling: allowUpscaling ?? true);
 }
 
 extension IntUt1 on int? {

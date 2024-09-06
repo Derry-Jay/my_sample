@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,26 +11,20 @@ import '../states/common_state.dart';
 import '../views/widgets/common/circular_loader.dart';
 import 'enums.dart';
 
-void rollbackOrientations() async {
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.landscapeRight,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+void rollbackOrientations() {
+  DeviceOrientation.values.setAllowedOrientations();
 }
 
-void lockScreenRotation() async {
-  await SystemChrome.setPreferredOrientations([
+void lockScreenRotation() {
+  <DeviceOrientation>[
     // DeviceOrientation.landscapeRight,
     // DeviceOrientation.landscapeLeft,
     DeviceOrientation.portraitUp,
-  ]);
+  ].setAllowedOrientations();
 }
 
-void showStatusBar() async {
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-      overlays: [SystemUiOverlay.top]);
+void showStatusBar() {
+  SystemUiMode.manual.setSystemUIMode([SystemUiOverlay.top]);
 }
 
 void hideLoader({Duration? time, LoaderType? type}) {
@@ -211,15 +203,4 @@ String? validateEmail(String? email) {
   return email != null && email.isValidEmail
       ? null
       : 'Please enter a valid Email';
-}
-
-Future<Uint8List> getBytesFromAsset(String path,
-    {int? width, int? height}) async {
-  final data = await rootBundle.load(path);
-  final codec = await instantiateImageCodec(data.buffer.asUint8List(),
-      targetWidth: width, targetHeight: height);
-  final fi = await codec.getNextFrame();
-  return (await fi.image.toByteData(format: ImageByteFormat.png))!
-      .buffer
-      .asUint8List();
 }
