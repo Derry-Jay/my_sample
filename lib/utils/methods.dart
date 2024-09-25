@@ -126,6 +126,10 @@ bool predicate5(Route route) {
   return route.willHandlePopInternally;
 }
 
+String getData(List<int> values) {
+  return base64.encode(values);
+}
+
 double getDoubleData(Map<String, dynamic> data) {
   return (data['data'] as double);
 }
@@ -134,15 +138,11 @@ bool getBoolData(Map<String, dynamic> data) {
   return (data['data'] as bool);
 }
 
-String getData(List<int> values) {
-  return base64.encode(values);
-}
-
 String getCommonPattern(String s, String t) {
+  int z = 0;
+  List<String> ret = <String>[];
   List<List<int>> l =
       List.generate(s.length + 1, (_) => List.filled(t.length + 1, 0));
-  int z = 0;
-  List<String> ret = [];
 
   for (int i = 1; i <= s.length; i++) {
     for (int j = 1; j <= t.length; j++) {
@@ -154,7 +154,7 @@ String getCommonPattern(String s, String t) {
         }
         if (l[i][j] > z) {
           z = l[i][j];
-          ret = [s.substring(i - z, i)];
+          ret = <String>[s.substring(i - z, i)];
         } else if (l[i][j] == z) {
           ret.add(s.substring(i - z, i));
         }
@@ -170,12 +170,8 @@ Uint8List fromIntList(List<int> list) {
   return getData(list).listData;
 }
 
-Widget errorBuilder(BuildContext context, Object object, StackTrace? trace) {
-  object.jot();
-  trace.jot();
-  return Icons.error.iconBuilder(
-      size: context.height / 16,
-      color: context.themeMaterial.secondaryHeaderColor);
+Widget numberBuilder(CommonState cm) {
+  return Center(child: cm.itemCount.string.textWidget());
 }
 
 Widget getImageLoader(BuildContext context, Widget child, int? i, bool flag) {

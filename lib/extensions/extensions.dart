@@ -1700,15 +1700,17 @@ extension Services on TimeOfDay {
 }
 
 extension Utils on String {
-  File get file => File(this);
-
   String get trimmed => trim();
+
+  File get file => File(trimmed);
 
   String get lowerCased => toLowerCase();
 
   String get upperCased => toUpperCase();
 
-  MarkerId get markerID => MarkerId(this);
+  MarkerId get markerID => MarkerId(trimmed);
+
+  Uint8List get bytes => base64.decode(trimmed);
 
   String get dateWithF2 => fmd1.format(dateTime);
 
@@ -1826,6 +1828,11 @@ extension Utils on String {
         'mod'
       ].contains(fileExtension);
 
+  MethodChannel getMethodChannel(
+          {MethodCodec? codec, BinaryMessenger? binaryMessenger}) =>
+      MethodChannel(
+          trimmed, codec ?? const StandardMethodCodec(), binaryMessenger);
+
   Uri get url {
     final base = apiMode.name.valFromConfig<String>()?.trimmed ?? '';
     return "$base${base.endsWith("/") ? '' : '/'}$trimmed".toUri();
@@ -1867,7 +1874,7 @@ extension Utils on String {
       'pics',
       'pictures'
     ]) {
-      if (trimmed.contains(element) || element.getRE().hasMatch(trimmed)) {
+      if (trimmed.contains(element) || element.getRE().hasMatch(trimmed) || trimmed.isImage) {
         result = true;
         break;
       } else {
@@ -1910,7 +1917,9 @@ extension Utils on String {
         .asUint8List()
         .setImageCodec(targetWidth: width, targetHeight: height);
     final fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ImageByteFormat.png))?.buffer.asUint8List();
+    return (await fi.image.toByteData(format: ImageByteFormat.png))
+        ?.buffer
+        .asUint8List();
   }
 
   Image getFromAsset(

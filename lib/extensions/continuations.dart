@@ -1,10 +1,38 @@
 import 'dart:ui';
 
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 
 import 'extensions.dart';
+
+extension Wup on Widget {
+  FlutterFlowIconButton getFlutterFlowIconButton(
+          {Key? key,
+          Color? fillColor,
+          Color? hoverColor,
+          double? buttonSize,
+          Color? borderColor,
+          double? borderWidth,
+          double? borderRadius,
+          Color? disabledColor,
+          Color? hoverIconColor,
+          Color? disabledIconColor,
+          dynamic Function()? onPressed}) =>
+      FlutterFlowIconButton(
+          key: key,
+          icon: this,
+          fillColor: fillColor,
+          onPressed: onPressed,
+          buttonSize: buttonSize,
+          hoverColor: hoverColor,
+          borderColor: borderColor,
+          borderWidth: borderWidth,
+          borderRadius: borderRadius,
+          disabledColor: disabledColor,
+          hoverIconColor: hoverIconColor,
+          disabledIconColor: disabledIconColor);
+}
 
 extension StrUt on String? {
   NumberFormat get fromPattern => NumberFormat(this);
