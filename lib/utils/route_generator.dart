@@ -1,13 +1,11 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../views/screens/common/menu_screen.dart';
-import '/extensions/extensions.dart';
-import '../models/common/route_argument.dart';
 import '../views/screens/common/error_screen.dart';
 import '../views/screens/common/sample_screen.dart';
-import 'enums.dart';
 
 class RouteGenerator {
   late bool? _shouldPerformTransition;
@@ -22,7 +20,7 @@ class RouteGenerator {
   RouteGenerator._internal();
 
   Route<dynamic> generateRoute(RouteSettings settings) {
-    final args = settings.arguments as RouteArgument?;
+    final RouteArgument? args = settings.arguments as RouteArgument?;
 
     Widget pageBuilder(BuildContext context) {
       switch (settings.name) {
@@ -57,17 +55,18 @@ class RouteGenerator {
             switch (args?.type) {
               case TransitionType.slide:
                 return SlideTransition(
-                    position: a1.drive(Tween(
-                        begin: [1.0, 1.0].offset, end: [0.0, 0.0].offset)),
+                    position: a1.drive(Tween<Offset>(
+                        begin: <double>[1.0, 1.0].offset,
+                        end: <double>[0.0, 0.0].offset)),
                     child: c5);
-              case TransitionType.scale:
-                return ScaleTransition(scale: a1, child: c5);
               case TransitionType.fade:
-                return FadeTransition(opacity: a1, child: c5);
-              case TransitionType.rotate:
-                return RotationTransition(turns: a2, child: c5);
+                return a1.transitionFade(child: c5);
               case TransitionType.size:
-                return SizeTransition(sizeFactor: a1, child: c5);
+                return a1.transitionSize(child: c5);
+              case TransitionType.scale:
+                return a1.transitionScale(child: c5);
+              case TransitionType.rotate:
+                return a2.transitionRotation(child: c5);
               default:
                 return pageBuilder(ct6);
             }
@@ -104,14 +103,14 @@ class RouteGenerator {
     switch (defaultTargetPlatform) {
       case TargetPlatform.iOS:
       case TargetPlatform.macOS:
-        return CupertinoPageRoute(builder: pageBuilder, settings: settings);
+        return pageBuilder.getApplePageRoute(settings: settings);
       default:
         return (_shouldPerformTransition ?? false)
             ? PageRouteBuilder(
                 settings: settings,
                 pageBuilder: screenBuilder,
                 transitionsBuilder: transitionBuilder)
-            : MaterialPageRoute(builder: pageBuilder, settings: settings);
+            : pageBuilder.getMaterialPageRoute(settings: settings);
     }
   }
 }

@@ -1,9 +1,7 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 
-import '../../../extensions/continuations.dart';
-import '../../../extensions/extensions.dart';
 import '../../../utils/values.dart';
-import '../../widgets/common/screen_layout.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,9 +15,8 @@ class SplashScreenState extends State<SplashScreen> {
     // TODO: implement build
     return ScreenLayout(
       content: context.nonNullSize.constrainChild(
-          child: 
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Flexible(child: acf.name.textWidget()),
+          child: <Widget>[
+        acf.name.textWidget().wrapWithFlexible(),
         // Flexible(
         //     child: ),
         //     Flexible(
@@ -28,7 +25,7 @@ class SplashScreenState extends State<SplashScreen> {
         //     child: )
         // Flexible(
         //     child: )
-      ])),
+      ].placeWidgetsVertically(mainAxisAlignment: MainAxisAlignment.center)),
     );
   }
 

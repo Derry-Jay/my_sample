@@ -1,26 +1,17 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 
-import '../../../extensions/extensions.dart';
-import '../../../utils/values.dart';
+import '../../extensions/extensions.dart';
 
 class Shade {
   final int variantID;
   final String color;
   Shade(this.variantID, this.color);
   Color get fromConfigs {
-    final cm = gc?.getValue<Map<String, Object?>>(
+    final Map<String, Object?> cm = gc?.getValue<Map<String, Object?>>(
             '${color}_color_variant_$variantID') ??
         <String, Object?>{};
-    '----------------'.jot();
-    cm['color'].jot();
-    '________________'.jot();
-    '----------------'.jot();
-    cm['alpha'].jot();
-    '________________'.jot();
-    '----------------'.jot();
-    jot();
-    '________________'.jot();
-    return cm['color'].string.getColorFromHex(cm['alpha'].string);
+    return cm.fromShadeMap;
   }
 
   @override

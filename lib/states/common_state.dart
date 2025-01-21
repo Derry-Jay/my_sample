@@ -1,12 +1,9 @@
 import 'dart:async';
 
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:june/june.dart';
 
-import '../extensions/extensions.dart';
-import '../models/common/progress.dart';
-import '../utils/keys.dart';
-import '../utils/methods.dart';
 import '../utils/values.dart';
 
 class CommonState extends JuneState with AnimationLocalStatusListenersMixin {
@@ -37,11 +34,10 @@ class CommonState extends JuneState with AnimationLocalStatusListenersMixin {
 
   void nextScreen() {
     void gotoNextScreen(Duration timeStamp) async {
-      await Future.delayed(
-          timeStamp.inSeconds == splashScreenDelay
+      await (timeStamp.inSeconds == splashScreenDelay
               ? timeStamp
-              : Duration(seconds: splashScreenDelay),
-          firstScreen);
+              : Duration(seconds: splashScreenDelay))
+          .delayedResult<void>(computation: firstScreen);
     }
 
     wb?.addPostFrameCallback(gotoNextScreen);
@@ -67,9 +63,9 @@ class CommonState extends JuneState with AnimationLocalStatusListenersMixin {
 
   void assignState(TickerProvider tp) {
     void setData(Duration duration) {
-      animationController = AnimationController(duration: duration, vsync: tp);
-      animation = Tween<double>(begin: bc?.pixelRatio, end: 0).animate(
-          CurvedAnimation(parent: animationController!, curve: Curves.easeOut))
+      animation = Tween<double>(begin: bc?.pixelRatio, end: 0).animate(tp
+          .getAnimationController(duration: duration)
+          .animationCurve(Curves.easeOut))
         ..addListener(goFrontIfMounted)
         ..addStatusListener(detectChange);
     }

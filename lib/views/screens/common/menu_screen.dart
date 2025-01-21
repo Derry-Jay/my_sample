@@ -1,17 +1,15 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:june/june.dart';
-import '../../../extensions/continuations.dart';
 import 'package:my_sample/utils/methods.dart';
-import '../../../extensions/extensions.dart';
-import '../../widgets/common/screen_layout.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final button = Icons.abc.iconBuilder().getFlutterFlowIconButton();
+    final button = Icons.abc.iconBuilder().iconButtonBuilder();
     return ScreenLayout(
         bottomNavigationBar: button,
         navigationBar: CupertinoNavigationBar(

@@ -1,10 +1,7 @@
-import 'package:flutter/foundation.dart';
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/extensions/extensions.dart';
-import 'app_root.dart';
-import 'utils/keys.dart';
 import 'utils/values.dart';
 import 'views/screens/common/splash_screen.dart';
 
@@ -19,14 +16,13 @@ class MyApp extends StatelessWidget {
         themeMaterial: css.theme,
         themeApple: css.appleTheme,
         onGenerateRoute: rg.generateRoute,
-        title: 'name'.valFromConfig<String>(),
-        debugShowCheckedModeBanner: kDebugMode);
+        title: 'name'.valFromConfig<String>());
   }
 
   @override
-  Widget build(BuildContext context) => ScreenUtilInit(
+  Widget build(BuildContext context) => adaptiveScreen(
       minTextAdapt: true,
       builder: rootBuilder,
-      designSize: minDesignSize,
+      lowestSize: minDesignSize,
       child: const SplashScreen());
 }
