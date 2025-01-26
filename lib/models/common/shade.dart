@@ -1,18 +1,14 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 
-import '../../extensions/extensions.dart';
-
 class Shade {
   final int variantID;
   final String color;
   Shade(this.variantID, this.color);
-  Color get fromConfigs {
-    final Map<String, Object?> cm = gc?.getValue<Map<String, Object?>>(
-            '${color}_color_variant_$variantID') ??
-        <String, Object?>{};
-    return cm.fromShadeMap;
-  }
+  Color get fromConfigs => (gc?.getValue<Map<String, Object?>>(
+              '${color}_color_variant_$variantID') ??
+          <String, Object?>{})
+      .fromShadeMap;
 
   @override
   String toString() => 'k${color.firstLetterCapitalized}$variantID';
