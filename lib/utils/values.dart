@@ -17,9 +17,9 @@ Map<String, dynamic> body = <String, dynamic>{};
 
 final css = Css(),
     shades = Shades(),
-    spaceExp = r'\s'.getRE(),
+    spaceExp = r'\s'.re(),
     measurements = Measurements(),
-    cm = obtainCommonState.state(),
+    cm = stateCommon.state(),
     rg = RouteGenerator(flag: true),
     minPwdLth = 'minimum_password_length'.valFromConfig<String>()?.toInt() ?? 8,
     maxPwdLth =

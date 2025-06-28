@@ -4,6 +4,8 @@ import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:june/june.dart';
 
+import '../extensions/extensions.dart';
+import '../utils/keys.dart';
 import '../utils/values.dart';
 
 class CommonState extends JuneState with AnimationLocalStatusListenersMixin {
@@ -15,7 +17,9 @@ class CommonState extends JuneState with AnimationLocalStatusListenersMixin {
 
   bool? flag;
 
-  int itemCount = 5;
+  int itemCount = 5, total = 0;
+
+  String initScreen = 'sample';
 
   Animation<double>? animation;
 
@@ -23,7 +27,8 @@ class CommonState extends JuneState with AnimationLocalStatusListenersMixin {
 
   Stream<Progress> get progress => _progressCon.stream;
 
-  final _progressCon = StreamController<Progress>.broadcast();
+  final StreamController<Progress> _progressCon =
+      StreamController<Progress>.broadcast();
 
   BuildContext? get bc =>
       navKey.currentContext ?? wb?.buildOwner?.focusManager.rootScope.context;
@@ -37,7 +42,7 @@ class CommonState extends JuneState with AnimationLocalStatusListenersMixin {
       await (timeStamp.inSeconds == splashScreenDelay
               ? timeStamp
               : Duration(seconds: splashScreenDelay))
-          .delayedResult<void>(computation: firstScreen);
+          .delayedResult<void>(computation: _firstScreen);
     }
 
     wb?.addPostFrameCallback(gotoNextScreen);
@@ -63,11 +68,14 @@ class CommonState extends JuneState with AnimationLocalStatusListenersMixin {
 
   void assignState(TickerProvider tp) {
     void setData(Duration duration) {
-      animation = Tween<double>(begin: bc?.pixelRatio, end: 0).animate(tp
-          .getAnimationController(duration: duration)
-          .animationCurve(Curves.easeOut))
-        ..addListener(goFrontIfMounted)
-        ..addStatusListener(detectChange);
+      animation =
+          Tween<double>(begin: bc?.pixelRatio, end: 0).animate(
+              tp
+                  .getAnimationController(duration: duration)
+                  .animationCurve(Curves.easeOut),
+            )
+            ..addListener(goFrontIfMounted)
+            ..addStatusListener(detectChange);
     }
 
     wb?.addPostFrameCallback(setData);
@@ -75,6 +83,11 @@ class CommonState extends JuneState with AnimationLocalStatusListenersMixin {
 
   void loaderDispose() {
     animationController?.dispose();
+  }
+
+  void onTextChanged(String? str) {
+    total = str.sum;
+    setState();
   }
 
   @override
@@ -89,7 +102,7 @@ class CommonState extends JuneState with AnimationLocalStatusListenersMixin {
     'object2'.jot();
   }
 
-  FutureOr firstScreen() {
-    return bc?.gotoForever('/menu');
+  FutureOr<Object?> _firstScreen() {
+    return bc?.gotoForever('/$initScreen');
   }
 }

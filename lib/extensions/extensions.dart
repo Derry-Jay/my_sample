@@ -3,11 +3,54 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:june/june.dart';
 
-extension Wup on String {
-  T? valFromConfig<T extends Object?>() => gc?.getValue<T>(trimmed);
+extension StrExt on String? {
+  int get sum {
+    try {
+      final String ip = trimmed.replaceAll(r'//'.re(), '');
+      if (ip.isEmpty) {
+        return 0;
+      } else {
+        final List<String> pts = ip.hew('\n');
+        final bool flag =
+            !(pts.isEmpty || pts.isSingle) && pts.first.toInt() < 0;
+        final List<String> temp = flag
+            ? pts.last.hew(pts.first)
+            : ip.hewWithMultipleDelimiters(<String>[
+                ' ',
+                ',',
+                ';',
+                ':',
+                '.',
+                '-',
+                '_',
+                '\\',
+                '/',
+                '.',
+                '^',
+                '*',
+                '%',
+                '!',
+                '=',
+                '?',
+                '@',
+                '#',
+                '\$',
+                '&',
+                '+',
+              ]);
+        temp.jot();
+        List<int> nos = temp.map<int>((String str) {
+          str.jot();
+          return str.toInt();
+        }).toList();
+        return nos.sum.integer;
+      }
+    } catch (e) {
+      e.jot();
+      return 0;
+    }
+  }
 }
-
-extension Assist on Map<String, Object?> {}
 
 extension Helper<T extends BuildContext> on T {}
 

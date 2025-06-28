@@ -49,7 +49,7 @@ class CircularLoaderState extends State<CircularLoader>
     switch (defaultTargetPlatform) {
       case TargetPlatform.iOS:
       case TargetPlatform.macOS:
-        c = widget.color ?? context.appleTheme.primaryColor;
+        c = widget.color ?? context.themeApple.primaryColor;
         break;
       default:
         c = widget.color ?? context.themeMaterial.primaryColor;

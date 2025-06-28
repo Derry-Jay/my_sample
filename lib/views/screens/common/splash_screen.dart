@@ -14,19 +14,8 @@ class SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return ScreenLayout(
-      content: context.nonNullSize.constrainChild(
-          child: <Widget>[
-        acf.name.textWidget().wrapWithFlexible(),
-        // Flexible(
-        //     child: ),
-        //     Flexible(
-        //         child: )
-        // Flexible(
-        //     child: )
-        // Flexible(
-        //     child: )
-      ].placeWidgetsVertically(mainAxisAlignment: MainAxisAlignment.center)),
-    );
+      content: acf.appName.toTextWidget(),
+    ).wrapWithinSafeArea();
   }
 
   @override

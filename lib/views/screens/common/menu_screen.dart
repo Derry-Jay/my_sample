@@ -1,23 +1,23 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:june/june.dart';
-import 'package:my_sample/utils/methods.dart';
+import '../../../extensions/extensions.dart';
+import '../../../utils/methods.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final button = Icons.abc.iconBuilder().iconButtonBuilder();
+    final Widget button = Icons.abc.iconBuilder().iconButtonBuilder();
     return ScreenLayout(
         bottomNavigationBar: button,
         navigationBar: CupertinoNavigationBar(
           trailing: button,
-          middle: 'Menu'.textWidget(),
+          middle: 'Menu'.toTextWidget(),
         ),
         appBar: AppBar(
-          title: 'Menu'.textWidget(),
+          title: 'Menu'.toTextWidget(),
           // flexibleSpace: Container(
           //   decoration: BoxDecoration(
           //     gradient: LinearGradient(
@@ -32,6 +32,6 @@ class MenuScreen extends StatelessWidget {
           //   ),
           // ),
         ),
-        content: const JuneBuilder(obtainCommonState, builder: numberBuilder));
+        content: stateCommon.builderJune(numberBuilder));
   }
 }

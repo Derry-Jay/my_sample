@@ -1,7 +1,6 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 import '../views/screens/common/menu_screen.dart';
 import '../views/screens/common/error_screen.dart';
@@ -23,6 +22,7 @@ class RouteGenerator {
     final RouteArgument? args = settings.arguments as RouteArgument?;
 
     Widget pageBuilder(BuildContext context) {
+      settings.name.jot();
       switch (settings.name) {
         case '/menu':
           return const MenuScreen();
@@ -34,31 +34,45 @@ class RouteGenerator {
     }
 
     Widget screenBuilder(
-        BuildContext ct1, Animation<double> a1, Animation<double> a2) {
+      BuildContext ct1,
+      Animation<double> a1,
+      Animation<double> a2,
+    ) {
       Widget contentBuilder(BuildContext ct2, Widget? c3) {
         Widget portionBuilder(BuildContext ct3, Widget? c4) {
           return c4 ?? pageBuilder(ct3);
         }
 
         return AnimatedBuilder(
-            animation: a2, builder: portionBuilder, child: c3);
+          animation: a2,
+          builder: portionBuilder,
+          child: c3,
+        );
       }
 
       return AnimatedBuilder(animation: a1, builder: contentBuilder);
     }
 
-    Widget transitionBuilder(BuildContext ct4, Animation<double> a1,
-        Animation<double> a2, Widget c1) {
+    Widget transitionBuilder(
+      BuildContext ct4,
+      Animation<double> a1,
+      Animation<double> a2,
+      Widget c1,
+    ) {
       Widget transitionedPageBuilder(BuildContext ct5, Widget? c2) {
         Widget transitionedScreenBuilder(BuildContext ct6, Widget? c5) {
           try {
             switch (args?.type) {
               case TransitionType.slide:
                 return SlideTransition(
-                    position: a1.drive(Tween<Offset>(
-                        begin: <double>[1.0, 1.0].offset,
-                        end: <double>[0.0, 0.0].offset)),
-                    child: c5);
+                  position: a1.drive(
+                    Tween<Offset>(
+                      begin: <double>[1.0, 1.0].offset,
+                      end: <double>[0.0, 0.0].offset,
+                    ),
+                  ),
+                  child: c5,
+                );
               case TransitionType.fade:
                 return a1.transitionFade(child: c5);
               case TransitionType.size:
@@ -77,17 +91,21 @@ class RouteGenerator {
         }
 
         return AnimatedBuilder(
-            animation: a2, builder: transitionedScreenBuilder, child: c2);
+          animation: a2,
+          builder: transitionedScreenBuilder,
+          child: c2,
+        );
       }
 
       switch (defaultTargetPlatform) {
         case TargetPlatform.iOS:
         case TargetPlatform.macOS:
           return CupertinoPageTransition(
-              primaryRouteAnimation: a1,
-              secondaryRouteAnimation: a2,
-              linearTransition: _shouldPerformTransition ?? false,
-              child: c1);
+            primaryRouteAnimation: a1,
+            secondaryRouteAnimation: a2,
+            linearTransition: _shouldPerformTransition ?? false,
+            child: c1,
+          );
         default:
           switch (args?.type) {
             case null:
@@ -95,7 +113,10 @@ class RouteGenerator {
               return screenBuilder(ct4, a1, a2);
             default:
               return AnimatedBuilder(
-                  animation: a1, builder: transitionedPageBuilder, child: c1);
+                animation: a1,
+                builder: transitionedPageBuilder,
+                child: c1,
+              );
           }
       }
     }
@@ -103,14 +124,15 @@ class RouteGenerator {
     switch (defaultTargetPlatform) {
       case TargetPlatform.iOS:
       case TargetPlatform.macOS:
-        return pageBuilder.getApplePageRoute(settings: settings);
+        return pageBuilder.routeApple(settings: settings);
       default:
         return (_shouldPerformTransition ?? false)
             ? PageRouteBuilder(
                 settings: settings,
                 pageBuilder: screenBuilder,
-                transitionsBuilder: transitionBuilder)
-            : pageBuilder.getMaterialPageRoute(settings: settings);
+                transitionsBuilder: transitionBuilder,
+              )
+            : pageBuilder.routeMaterial(settings: settings);
     }
   }
 }

@@ -4,7 +4,6 @@
 *.pyc
 *.swp
 .DS_Store
-Thumbs.db
 .atom/
 .buildlog/
 .history
@@ -15,11 +14,12 @@ Thumbs.db
 *.ipr
 *.iws
 **/local.properties
+**/.idea/
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
-#.vscode/
+settings.json
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -33,14 +33,14 @@ Thumbs.db
 /build/
 pubspec.lock
 GeneratedPluginRegistrant.*
+.fvm
 
 # Web related
 **/generated_plugin_registrant.*
+**/.firebase
 
 # Symbolication related
 app.*.symbols
 
 # Obfuscation related
 app.*.map.json
-
-.fake

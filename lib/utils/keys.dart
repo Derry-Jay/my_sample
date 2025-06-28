@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
+import 'package:common_utils/common_utils.dart';
 
-final addEditAnnouncementFormKey = GlobalKey<FormState>(),
-    navKey = GlobalKey<NavigatorState>(debugLabel: 'app'),
-    loginFormKey = GlobalKey<FormState>(debugLabel: 'login');
+final navKey = 'app'.keyNavigator, loginFormKey = 'login'.keyForm;

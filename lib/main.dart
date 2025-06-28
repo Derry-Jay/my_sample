@@ -5,10 +5,7 @@ import 'my_app.dart';
 
 void main() async {
   try {
-    initApp('config');
-    (wb?.buildOwner?.debugBuilding ?? true)
-        ? doNothing()
-        : runApp(const MyApp());
+    await 'config'.appInitialized ? runApp(const MyApp()) : doNothing();
   } catch (e) {
     e.jot();
   }

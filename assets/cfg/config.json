@@ -5,5 +5,17 @@
   "minimum_screen_height": "812",
   "minimum_password_length": "6",
   "maximum_password_length": "12",
-  "cricket_api_key": "fb430b53-5152-4627-9743-8169ef8d014b"
+  "cricket_api_key": "fb430b53-5152-4627-9743-8169ef8d014b",
+  "black_color_variant_1": {
+    "alpha": "77",
+    "color": "000000"
+  },
+  "grey_color_variant_1": {
+    "alpha": "104",
+    "color": "757575"
+  },
+  "gold_color_variant_1": {
+    "alpha": "255",
+    "color": "FFB24D"
+  }
 }
